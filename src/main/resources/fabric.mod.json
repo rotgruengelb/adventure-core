@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "adventure_core",
+	"version": "${version}",
+	"name": "Adventure Core",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/adventure_core/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.rotgruengelb.adventure_core.AdventureCore"
+		],
+		"client": [
+			"net.rotgruengelb.adventure_core.AdventureCoreClient"
+		]
+	},
+	"mixins": [
+		"adventure_core.mixins.json",
+		{
+			"config": "adventure_core.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.2",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
