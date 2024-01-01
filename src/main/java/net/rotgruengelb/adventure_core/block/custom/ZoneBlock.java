@@ -32,7 +32,7 @@ public class ZoneBlock extends BlockWithEntity implements OperatorBlock, BlockEn
 
     public ZoneBlock(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(MODE, ZoneBlockMode.DENY_PLACE).with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateManager.getDefaultState().with(MODE, ZoneBlockMode.TRIGGER).with(FACING, Direction.NORTH));
     }
 
     @Override
