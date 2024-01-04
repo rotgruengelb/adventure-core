@@ -19,25 +19,32 @@ import java.util.regex.Pattern;
 public class ModifyJigsawStructureLimitsMixin {
 
 	/* method_41662: instance lambda in CODEC assignment */
-	@ModifyArg(method = "method_41662",
-			   at = @At(value = "INVOKE",
-						ordinal = 0,
-						target = "Lcom/mojang/serialization/Codec;intRange(II)Lcom/mojang/serialization/Codec;"),
-			   index = 1)
+	@ModifyArg(
+			method = "method_41662", at = @At(
+			value = "INVOKE",
+			ordinal = 0,
+			target = "Lcom/mojang/serialization/Codec;intRange(II)Lcom/mojang/serialization/Codec;"
+	), index = 1
+	)
 	private static int codec__expand_size(int i) { return i * 99; }
 
 	/* method_41662: instance lambda in CODEC assignment */
-	@ModifyArg(method = "method_41662",
-			   at = @At(value = "INVOKE",
-						ordinal = 1,
-						target = "Lcom/mojang/serialization/Codec;intRange(II)Lcom/mojang/serialization/Codec;"),
-			   index = 1)
+	@ModifyArg(
+			method = "method_41662", at = @At(
+			value = "INVOKE",
+			ordinal = 1,
+			target = "Lcom/mojang/serialization/Codec;intRange(II)Lcom/mojang/serialization/Codec;"
+	), index = 1
+	)
 	private static int codec__expand_maxDistanceFromCenter(int i) { return i * 99; }
 
-	@ModifyExpressionValue(method = "validate",
-						   at = @At(value = "FIELD",
-									target = "Lnet/minecraft/world/gen/structure/JigsawStructure;maxDistanceFromCenter:I",
-									opcode = Opcodes.GETFIELD))
+	@ModifyExpressionValue(
+			method = "validate", at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/world/gen/structure/JigsawStructure;maxDistanceFromCenter:I",
+			opcode = Opcodes.GETFIELD
+	)
+	)
 	private static int validate__bypass_maxDistanceFromCenter_checks(int i) { return 0; }
 
 	@Inject(method = "validate", at = @At(value = "RETURN"))

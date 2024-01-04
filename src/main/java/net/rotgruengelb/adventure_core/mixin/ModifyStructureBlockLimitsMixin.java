@@ -8,10 +8,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(StructureBlockBlockEntity.class)
 public class ModifyStructureBlockLimitsMixin {
 
-	@ModifyArg(method = "readNbt",
-			   at = @At(value = "INVOKE",
-						target = "Lnet/minecraft/util/math/MathHelper;clamp(III)I",
-						ordinal = 3),
-			   index = 2)
+	@ModifyArg(
+			method = "readNbt", at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/util/math/MathHelper;clamp(III)I",
+			ordinal = 3
+	), index = 2
+	)
 	private int readNbt__expandMax(int i) { return 100; }
 }

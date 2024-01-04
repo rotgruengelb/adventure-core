@@ -12,9 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockItem.class)
 public class BlockItemMixin {
 
-	@Inject(method = "place(Lnet/minecraft/item/ItemPlacementContext;)Lnet/minecraft/util/ActionResult;",
+	@Inject(
+			method = "place(Lnet/minecraft/item/ItemPlacementContext;)Lnet/minecraft/util/ActionResult;",
 			at = @At("HEAD"),
-			cancellable = true)
+			cancellable = true
+	)
 	private void place__cancelPlacementIfNotAllowed(ItemPlacementContext context, CallbackInfoReturnable<ActionResult> cir) {
 		if (context.getBlockPos().equals(new BlockPos(0, 100, 0))) {
 			cir.setReturnValue(net.minecraft.util.ActionResult.FAIL);
