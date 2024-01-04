@@ -9,12 +9,10 @@ import net.rotgruengelb.adventure_core.AdventureCore;
 import net.rotgruengelb.adventure_core.block.ModBlocks;
 
 public class ModBlockEntities {
-    public static final BlockEntityType<ZoneBlockBlockEntity> ZONE_BLOCK_BLOCK_ENTITY = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE,
-            new Identifier(AdventureCore.MOD_ID, "zone_block_block_entity"),
-            FabricBlockEntityTypeBuilder.create(ZoneBlockBlockEntity::new, ModBlocks.ZONE_BLOCK).build());
-
     public static void registerModBlockEntities() {
         AdventureCore.LOGGER.info("Registering ModBlockEntities for " + AdventureCore.MOD_ID);
     }
+
+    public static final BlockEntityType<ZoneBlockBlockEntity> ZONE_BLOCK_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(AdventureCore.MOD_ID, "zone_block_block_entity"), FabricBlockEntityTypeBuilder.create(ZoneBlockBlockEntity::new, ModBlocks.ZONE_BLOCK).build());
+
 }

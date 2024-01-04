@@ -54,6 +54,7 @@ public class ModifyJigsawStructureLimitsMixin {
             return "";
         }
     }
+
     @Unique
     private static String parse_object_string(Object input) {
         String regex = "([a-zA-Z]+)\\.(\\w+@\\w+)";

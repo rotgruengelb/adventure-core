@@ -3,6 +3,7 @@ package net.rotgruengelb.adventure_core.client.gui.screen.ingame;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -11,20 +12,22 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.rotgruengelb.adventure_core.block.ModBlocks;
-import net.rotgruengelb.adventure_core.block.custom.ZoneBlock;
+import net.rotgruengelb.adventure_core.block.ZoneBlock;
 import net.rotgruengelb.adventure_core.block.entity.ZoneBlockBlockEntity;
 import net.rotgruengelb.adventure_core.block.enums.ZoneBlockMode;
-import net.rotgruengelb.adventure_core.network.packet.c2s.common.CustomPlayPayloadC2SPacket;
-import net.rotgruengelb.adventure_core.network.payload.c2s.UpdateZoneBlockC2SPayload;
+import net.rotgruengelb.adventure_core.network.UpdateZoneBlockC2SPacket;
 import org.lwjgl.glfw.GLFW;
+
+import static net.rotgruengelb.adventure_core.network.UpdateZoneBlockC2SPacket.UPDATE_ZONE_BLOCK_PACKET_ID;
 
 @Environment(value = EnvType.CLIENT)
 public class ZoneBlockScreen extends Screen {
     private static final ImmutableList<ZoneBlockMode> MODES = ImmutableList.copyOf(ZoneBlockMode.values());
     private static final Text SHOW_ZONES_TEXT = Text.translatable("text.adventure_core.zone_block.screen.show_zones");
-    private final ZoneBlockBlockEntity referenceZoneBlock;
-    private final Text title = Text.translatable("text.adventure_core.zone_block.screen.title");
+    private static final Text title = Text.translatable("text.adventure_core.zone_block.screen.title");
+    private final BlockPos pos;
     private final ZoneBlockMode originalMode;
     private final boolean originalShowZones;
     private ZoneBlockMode newMode;
@@ -33,8 +36,8 @@ public class ZoneBlockScreen extends Screen {
     private CyclingButtonWidget<ZoneBlockMode> buttonMode;
 
     public ZoneBlockScreen(ZoneBlockBlockEntity zoneBlock) {
-        super(Text.translatable(ModBlocks.ZONE_BLOCK.getTranslationKey()));
-        this.referenceZoneBlock = zoneBlock;
+        super(title);
+        this.pos = zoneBlock.getPos();
         this.originalMode = zoneBlock.getMode();
         this.originalShowZones = zoneBlock.shouldShowZones();
         this.newMode = this.originalMode;
@@ -43,7 +46,7 @@ public class ZoneBlockScreen extends Screen {
 
     private void done() {
         this.clientBlockState(this.newMode);
-        this.client.getNetworkHandler().sendPacket(new CustomPlayPayloadC2SPacket(new UpdateZoneBlockC2SPayload(this.referenceZoneBlock.getPos(), this.newMode, this.newShowZones)));
+        ClientPlayNetworking.send(UPDATE_ZONE_BLOCK_PACKET_ID, new UpdateZoneBlockC2SPacket(this.pos, this.newMode, this.newShowZones).create());
         this.client.setScreen(null);
     }
 
@@ -61,15 +64,14 @@ public class ZoneBlockScreen extends Screen {
         }));
         this.updateWidgets(this.newMode);
         this.clientBlockState(this.newMode);
-        this.referenceZoneBlock.setMode(this.originalMode);
     }
 
     private void clientBlockState(ZoneBlockMode mode) {
         if (client != null) {
             client.execute(() -> {
-                BlockState blockState = client.world.getBlockState(this.referenceZoneBlock.getPos());
+                BlockState blockState = client.world.getBlockState(this.pos);
                 if (blockState.isOf(ModBlocks.ZONE_BLOCK)) {
-                    client.world.setBlockState(this.referenceZoneBlock.getPos(), blockState.with(ZoneBlock.MODE, mode), 2);
+                    client.world.setBlockState(this.pos, blockState.with(ZoneBlock.MODE, mode), 2);
                 }
             });
         }
@@ -122,7 +124,7 @@ public class ZoneBlockScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         context.drawTextWithShadow(this.textRenderer, SHOW_ZONES_TEXT, this.width / 2 + 154 - this.textRenderer.getWidth(SHOW_ZONES_TEXT), 70, 0xA0A0A0);
-        context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 10, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, title, this.width / 2, 10, 0xFFFFFF);
         context.drawTextWithShadow(this.textRenderer, this.newMode.asText(), this.width / 2 - 153, 174, 0xA0A0A0);
     }
 

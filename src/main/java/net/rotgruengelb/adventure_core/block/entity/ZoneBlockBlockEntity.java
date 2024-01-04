@@ -9,10 +9,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-import net.rotgruengelb.adventure_core.AdventureCore;
 import net.rotgruengelb.adventure_core.accessor.AdventureCoreClientPlayerEntity;
 import net.rotgruengelb.adventure_core.block.ModBlocks;
-import net.rotgruengelb.adventure_core.block.custom.ZoneBlock;
+import net.rotgruengelb.adventure_core.block.ZoneBlock;
 import net.rotgruengelb.adventure_core.block.enums.ZoneBlockMode;
 import net.rotgruengelb.adventure_core.util.math.BlockZone;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +55,7 @@ public class ZoneBlockBlockEntity extends BlockEntity implements BlockEntityProv
         this.showZones = nbt.getBoolean("showZones");
         this.zones = this.nbtToZones(nbt.getCompound("zones"));
         try {
-            this.mode = ZoneBlockMode.valueOf(nbt.getString("mode"));
+            this.mode = ZoneBlockMode.valueOf(nbt.getString("mode").toUpperCase());
         } catch (IllegalArgumentException e) {
             this.mode = ZoneBlockMode.TRIGGER;
         }
@@ -108,7 +107,8 @@ public class ZoneBlockBlockEntity extends BlockEntity implements BlockEntityProv
     public void markDirty() {
         if (world != null) {
             world.updateListeners(pos, getCachedState(), getCachedState(), 3);
-        } super.markDirty();
+        }
+        super.markDirty();
     }
 
     public boolean isPowered() {

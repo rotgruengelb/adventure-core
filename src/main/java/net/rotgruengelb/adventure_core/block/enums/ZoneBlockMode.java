@@ -8,6 +8,7 @@ import net.minecraft.util.StringIdentifiable;
 
 public enum ZoneBlockMode implements StringIdentifiable {
     TRIGGER("trigger"),
+    CUSTOM_RULESET("custom_ruleset"),
     DENY_BREAK("deny_break"),
     DENY_PLACE("deny_place"),
     ALLOW_BREAK("allow_break"),

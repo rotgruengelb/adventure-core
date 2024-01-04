@@ -1,4 +1,4 @@
-package net.rotgruengelb.adventure_core.block.custom;
+package net.rotgruengelb.adventure_core.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;

@@ -3,10 +3,9 @@
   "package": "net.rotgruengelb.adventure_core.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BlockItemMixin",
     "ModifyJigsawStructureLimitsMixin",
-    "ModifyStructureBlockLimitsMixin",
-    "NetworkStateInternalPacketHandlerMixin",
-    "ServerPlayNetworkHandlerMixin"
+    "ModifyStructureBlockLimitsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
