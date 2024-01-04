@@ -9,11 +9,10 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(net.minecraft.client.network.ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin implements AdventureCoreClientPlayerEntity {
-    @Unique
-    private final MinecraftClient client = MinecraftClient.getInstance();
+	@Unique private final MinecraftClient client = MinecraftClient.getInstance();
 
-    @Override
-    public void adventure_core$openZoneBlockScreen(ZoneBlockBlockEntity zoneBlock) {
-        this.client.setScreen(new ZoneBlockScreen(zoneBlock));
-    }
+	@Override
+	public void adventure_core$openZoneBlockScreen(ZoneBlockBlockEntity zoneBlock) {
+		this.client.setScreen(new ZoneBlockScreen(zoneBlock));
+	}
 }

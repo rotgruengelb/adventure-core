@@ -12,22 +12,22 @@ import net.rotgruengelb.adventure_core.AdventureCore;
 
 public class ModBlocks {
 
-    public static final Block ZONE_BLOCK = registerBlock("zone_block", new ZoneBlock(FabricBlockSettings.copyOf(Blocks.STRUCTURE_BLOCK)));
+	public static final Block ZONE_BLOCK = registerBlock("zone_block", new ZoneBlock(FabricBlockSettings.copyOf(Blocks.STRUCTURE_BLOCK)));
 
-    private static Block registerBlockNoItem(String name, Block block) {
-        return Registry.register(Registries.BLOCK, new Identifier(AdventureCore.MOD_ID, name), block);
-    }
+	private static Block registerBlockNoItem(String name, Block block) {
+		return Registry.register(Registries.BLOCK, new Identifier(AdventureCore.MOD_ID, name), block);
+	}
 
-    private static Block registerBlock(String name, Block block) {
-        registerBlockItem(name, new BlockItem(block, new FabricItemSettings()));
-        return Registry.register(Registries.BLOCK, new Identifier(AdventureCore.MOD_ID, name), block);
-    }
+	private static Block registerBlock(String name, Block block) {
+		registerBlockItem(name, new BlockItem(block, new FabricItemSettings()));
+		return Registry.register(Registries.BLOCK, new Identifier(AdventureCore.MOD_ID, name), block);
+	}
 
-    private static void registerBlockItem(String name, BlockItem blockItem) {
-        Registry.register(Registries.ITEM, new Identifier(AdventureCore.MOD_ID, name), blockItem);
-    }
+	private static void registerBlockItem(String name, BlockItem blockItem) {
+		Registry.register(Registries.ITEM, new Identifier(AdventureCore.MOD_ID, name), blockItem);
+	}
 
-    public static void registerModBlocks() {
-        AdventureCore.LOGGER.info("Registering ModBlocks for " + AdventureCore.MOD_ID);
-    }
+	public static void registerModBlocks() {
+		AdventureCore.LOGGER.info("Registering ModBlocks for " + AdventureCore.MOD_ID);
+	}
 }

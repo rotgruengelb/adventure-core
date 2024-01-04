@@ -25,80 +25,73 @@ import net.rotgruengelb.adventure_core.state.ModProperties;
 import org.jetbrains.annotations.Nullable;
 
 public class ZoneBlock extends BlockWithEntity implements OperatorBlock, BlockEntityProvider {
-    public static final EnumProperty<ZoneBlockMode> MODE = ModProperties.ZONE_BLOCK_MODE;
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final MapCodec<ZoneBlock> CODEC = ZoneBlock.createCodec(ZoneBlock::new);
+	public static final EnumProperty<ZoneBlockMode> MODE = ModProperties.ZONE_BLOCK_MODE;
+	public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+	public static final MapCodec<ZoneBlock> CODEC = ZoneBlock.createCodec(ZoneBlock::new);
 
+	public ZoneBlock(AbstractBlock.Settings settings) {
+		super(settings);
+		this.setDefaultState(this.stateManager.getDefaultState().with(MODE, ZoneBlockMode.TRIGGER)
+				.with(FACING, Direction.NORTH));
+	}
 
-    public ZoneBlock(AbstractBlock.Settings settings) {
-        super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(MODE, ZoneBlockMode.TRIGGER).with(FACING, Direction.NORTH));
-    }
+	@Override
+	protected MapCodec<? extends BlockWithEntity> getCodec() { return CODEC; }
 
-    @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
-        return CODEC;
-    }
+	@Override
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new ZoneBlockBlockEntity(pos, state);
+	}
 
-    @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ZoneBlockBlockEntity(pos, state);
-    }
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof ZoneBlockBlockEntity) {
+			return ((ZoneBlockBlockEntity) blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+		}
+		return ActionResult.PASS;
+	}
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ZoneBlockBlockEntity) {
-            return ((ZoneBlockBlockEntity) blockEntity).openScreen(player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
-        }
-        return ActionResult.PASS;
-    }
+	@Override
+	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+	}
 
+	@Override
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(FACING, rotation.rotate(state.get(FACING)));
+	}
 
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-    }
+	@Override
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.rotate(mirror.getRotation(state.get(FACING)));
+	}
 
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
+	@Override
+	public BlockRenderType getRenderType(BlockState state) { return BlockRenderType.MODEL; }
 
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(MODE, FACING);
+	}
 
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) { return this.getDefaultState(); }
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(MODE, FACING);
-    }
-
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState();
-    }
-
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!(world instanceof ServerWorld)) {
-            return;
-        }
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ZoneBlockBlockEntity zoneBlockBlockEntity)) {
-            return;
-        }
-        boolean isReceivingRedstonePower = world.isReceivingRedstonePower(pos);
-        boolean isPowered = zoneBlockBlockEntity.isPowered();
-        if (isReceivingRedstonePower && !isPowered) {
-            zoneBlockBlockEntity.setPowered(true);
-        } else if (!isReceivingRedstonePower && isPowered) {
-            zoneBlockBlockEntity.setPowered(false);
-        }
-    }
+	@Override
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+		if (!(world instanceof ServerWorld)) {
+			return;
+		}
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof ZoneBlockBlockEntity zoneBlockBlockEntity)) {
+			return;
+		}
+		boolean isReceivingRedstonePower = world.isReceivingRedstonePower(pos);
+		boolean isPowered = zoneBlockBlockEntity.isPowered();
+		if (isReceivingRedstonePower && !isPowered) {
+			zoneBlockBlockEntity.setPowered(true);
+		} else if (!isReceivingRedstonePower && isPowered) {
+			zoneBlockBlockEntity.setPowered(false);
+		}
+	}
 }

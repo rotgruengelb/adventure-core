@@ -9,15 +9,15 @@ import org.slf4j.LoggerFactory;
 
 public class AdventureCore implements ModInitializer {
 
-    public static final String MOD_ID = "adventure_core";
-    public static final Logger LOGGER = LoggerFactory.getLogger("adventure_core");
+	public static final String MOD_ID = "adventure_core";
+	public static final Logger LOGGER = LoggerFactory.getLogger("adventure_core");
 
-    @Override
-    public void onInitialize() {
-        LOGGER.info("Hello Fabric world!");
+	@Override
+	public void onInitialize() {
+		LOGGER.info("Hello Fabric world!");
 
-        ModBlocks.registerModBlocks();
-        ModBlockEntities.registerModBlockEntities();
-        ModC2SReceivers.registerModC2SReceivers();
-    }
+		ModBlocks.registerModBlocks();
+		ModBlockEntities.registerModBlockEntities();
+		ModC2SReceivers.registerModC2SReceivers();
+	}
 }
